@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+#oof
+cap = cv2.VideoCapture(1)
+
+lower_blue = np.array([110, 50, 50])
+upper_blue = np.array([130, 255, 255])
+lower_green = np.array([45, 25, 50])
+upp_green = np.array([85, 255, 255])
+
+while(1):
+
+    # Take each frame
+    _, frame = cap.read()
+
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    # Threshold the HSV image to get only blue colors
+    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+    mask_g = cv2.inRange(hsv, lower_green, upp_green)
+
+    # Bitwise-AND mask and original image
+    res = cv2.bitwise_and(frame,frame, mask=mask)
+    res_g = cv2.bitwise_and(frame, frame, mask=mask_g)
+
+    cv2.imshow('frame', frame)
+    cv2.imshow('mask', mask)
+    cv2.imshow('mask_g',mask_g)
+    cv2.imshow('res', res)
+    cv2.imshow('res_g', res_g)
+    k = cv2.waitKey(5) & 0xFF
+    if k == 27:
+        break
+
+cv2.destroyAllWindows()
